@@ -4,7 +4,7 @@ import pandas
 from typing import *
 
 from bokeh.plotting import figure, Figure, gridplot, curdoc
-from bokeh.models import HoverTool, ColumnDataSource, TapTool, Slider, TextInput, Select
+from bokeh.models import HoverTool, ColumnDataSource, TapTool, Slider, Div, Select
 from bokeh.transform import jitter
 from bokeh.layouts import gridplot, column, row
 
@@ -13,7 +13,6 @@ class Swarm(WebPlot):
 
     def __init__(
             self,
-            doc,
             dataframe: pandas.DataFrame,
             data_column: str,
             groupby_column: str,
@@ -25,7 +24,7 @@ class Swarm(WebPlot):
         self.sig_point_selected = BokehCallbackSignal()
         WebPlot.__init__(self)
 
-        self.doc = doc
+        # self.doc = doc
 
         # just setting some attributes
         self.dataframe: pandas.DataFrame = dataframe
@@ -89,10 +88,10 @@ class Swarm(WebPlot):
 
         self.source_columns = source_columns
 
-        self.label_point_clicked: TextInput = TextInput(value='', title='Point clicked: ')
+        self.table_widget: Div = Div(text='')
 
-    def _update_label(self, text: str):
-        self.label_point_clicked.update(value=text)
+    def update_table_widget(self, sub_df: pandas.DataFrame):
+        self.table_widget.update(text=sub_df.to_html())
 
     def start_app(self, doc):
         """
@@ -108,12 +107,9 @@ class Swarm(WebPlot):
         # when a point is clicked on the scatter plot it will trigger ``sig_point_selected``
         self.glyph.data_source.selected.on_change('indices', self.sig_point_selected.trigger)
 
-        # when ``sig_point_selected`` is triggered it will update the text entry
-        self.sig_point_selected.connect_data(self._update_label, 'uuid')
-
-        self.doc.add_root(
+        doc.add_root(
             column(
-                row(*f for f in [self.figure]),
-                self.label_point_clicked
+                row(self.figure),
+                self.table_widget
             )
         )
