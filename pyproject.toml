@@ -1,0 +1,6 @@
+[build-system]
+requires = [
+  "setuptools >= 50.3.0",
+  "wheel >= 0.35.0",
+  "pip >= 20.2.0"
+]
