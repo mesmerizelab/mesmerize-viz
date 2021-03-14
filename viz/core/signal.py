@@ -117,11 +117,11 @@ class BokehCallbackSignal:
         :param val: list containing a single integer, which is an index for source_data
         :return:
         """
-        # print(f"VAL IN SIGNAL: {val}")
+        print(f"VAL IN SIGNAL: {val}")
         for func, identifier in self.callbacks_data:
             uid = self.source_data.data[identifier][val][0]  # get the source_data present at the `val` index
             # print(uid)
             # subdataframe where the identifier UUID matches
             out = self.dataframe[self.dataframe[identifier] == uid]
-            # print(out.copy(deep=True))
+            print(out.copy(deep=True))
             func(out)
