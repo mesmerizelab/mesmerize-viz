@@ -1,0 +1,6 @@
+numpy
+bokeh
+tifffile
+pandas
+imagecodecs
+
